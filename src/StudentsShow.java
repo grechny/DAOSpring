@@ -17,7 +17,7 @@ public class StudentsShow extends HttpServlet {
     public void doGet (HttpServletRequest request,HttpServletResponse response) {
 
         response.setContentType("text/html");
-        PrintWriter out = null;
+        PrintWriter out;
         try {
             out = response.getWriter();
         } catch (IOException e) {
@@ -33,7 +33,7 @@ public class StudentsShow extends HttpServlet {
 
         DAOFactory mysqlFactory;
         try {
-            mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+            mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
         } catch (Exception e) {
             e.printStackTrace();
             return;

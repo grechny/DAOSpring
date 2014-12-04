@@ -4,13 +4,13 @@ import dao.mysql.MySQLDAOFactory;
 
 public abstract class DAOFactory {
 
-    public static final int MYSQL = 1;
+    public static enum Factory { MYSQL }
 
     public abstract GenericDAO getStudentsDAO();
     public abstract GenericDAO getSubjectsDAO();
     public abstract GenericDAO getMarksDAO();
 
-    public static DAOFactory getDAOFactory(int whichFactory) throws Exception {
+    public static DAOFactory getDAOFactory(Factory whichFactory) throws Exception {
 
         switch (whichFactory) {
             case MYSQL:

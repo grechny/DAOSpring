@@ -65,7 +65,7 @@ public class SubjectDelete extends HttpServlet {
 
         DAOFactory mysqlFactory;
         try {
-            mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+            mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
         } catch (Exception e) {
             e.printStackTrace();
             return;
