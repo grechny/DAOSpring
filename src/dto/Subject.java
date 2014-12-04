@@ -2,8 +2,8 @@ package dto;
 
 public class Subject {
 
-    int id;
-    String subject;
+    private int id;
+    private String subject;
 
     public void setValues (int id, String subject) {
 

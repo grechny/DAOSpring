@@ -2,10 +2,10 @@ package dto;
 
 public class Mark {
 
-    int id;
-    int studentId;
-    int subjectId;
-    int mark;
+    private int id;
+    private int studentId;
+    private int subjectId;
+    private int mark;
 
     public void setValues (int id, int studentId, int subjectId, int mark) {
 

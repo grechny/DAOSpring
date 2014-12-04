@@ -2,9 +2,9 @@ package dto;
 
 public class Student {
 
-    int id;
-    String firstName;
-    String lastName;
+    private int id;
+    private String firstName;
+    private String lastName;
 
     public void setValues (int id, String firstName, String lastName) {
 
