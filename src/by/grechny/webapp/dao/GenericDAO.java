@@ -1,4 +1,4 @@
-package dao;
+package by.grechny.webapp.dao;
 
 import java.sql.SQLException;
 import java.util.List;

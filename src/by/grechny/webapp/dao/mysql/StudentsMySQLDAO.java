@@ -1,6 +1,6 @@
-package dao.mysql;
+package by.grechny.webapp.dao.mysql;
 
-import dto.Student;
+import by.grechny.webapp.dto.Student;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

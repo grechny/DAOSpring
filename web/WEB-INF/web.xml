@@ -5,78 +5,8 @@
          version="3.1">
 
     <servlet>
-        <servlet-name>StudentsList</servlet-name>
-        <servlet-class>StudentsShow</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>StudentsList</servlet-name>
-        <url-pattern>/students</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>StudentUpdate</servlet-name>
-        <servlet-class>StudentUpdate</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>StudentUpdate</servlet-name>
-        <url-pattern>/students/update</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>StudentDelete</servlet-name>
-        <servlet-class>StudentDelete</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>StudentDelete</servlet-name>
-        <url-pattern>/students/delete</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>SubjectList</servlet-name>
-        <servlet-class>SubjectsShow</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>SubjectList</servlet-name>
-        <url-pattern>/subjects</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>SubjectUpdate</servlet-name>
-        <servlet-class>SubjectUpdate</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>SubjectUpdate</servlet-name>
-        <url-pattern>/subjects/update</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>SubjectDelete</servlet-name>
-        <servlet-class>SubjectDelete</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>SubjectDelete</servlet-name>
-        <url-pattern>/subjects/delete</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>MarkAdd</servlet-name>
-        <servlet-class>MarkAdd</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>MarkAdd</servlet-name>
-        <url-pattern>/marks/add</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Main</servlet-name>
-        <servlet-class>MainPage</servlet-class>
+        <servlet-class>by.grechny.webapp.WebApp</servlet-class>
     </servlet>
 
     <servlet-mapping>

@@ -1,6 +1,6 @@
-package dao.mysql;
+package by.grechny.webapp.dao.mysql;
 
-import dao.GenericDAO;
+import by.grechny.webapp.dao.GenericDAO;
 
 import java.sql.*;
 import java.util.*;

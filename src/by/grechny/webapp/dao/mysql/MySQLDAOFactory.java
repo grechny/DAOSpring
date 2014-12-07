@@ -1,7 +1,7 @@
-package dao.mysql;
+package by.grechny.webapp.dao.mysql;
 
-import dao.DAOFactory;
-import dao.GenericDAO;
+import by.grechny.webapp.dao.DAOFactory;
+import by.grechny.webapp.dao.GenericDAO;
 
 import java.io.IOException;
 import java.io.InputStream;

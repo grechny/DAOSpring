@@ -1,4 +1,4 @@
-package dto;
+package by.grechny.webapp.dto;
 
 public class Student {
 

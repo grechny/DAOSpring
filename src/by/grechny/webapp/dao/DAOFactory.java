@@ -1,6 +1,6 @@
-package dao;
+package by.grechny.webapp.dao;
 
-import dao.mysql.MySQLDAOFactory;
+import by.grechny.webapp.dao.mysql.MySQLDAOFactory;
 
 public abstract class DAOFactory {
 

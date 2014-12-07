@@ -1,6 +1,6 @@
-package dao.mysql;
+package by.grechny.webapp.dao.mysql;
 
-import dto.Mark;
+import by.grechny.webapp.dto.Mark;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
