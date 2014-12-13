@@ -26,13 +26,6 @@ public class WebApp extends HttpServlet {
             isCreatedSession = false;
         }
 
-        DAOFactory mysqlFactory;
-        try {
-            mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
         GenericDAO studentDAO;
         GenericDAO subjectDAO;
         GenericDAO markDAO;
@@ -42,6 +35,13 @@ public class WebApp extends HttpServlet {
             subjectDAO = (GenericDAO) session.getAttribute("subjectDAO");
             markDAO = (GenericDAO) session.getAttribute("markDAO");
         } else {
+            DAOFactory mysqlFactory;
+            try {
+                mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
             studentDAO = mysqlFactory.getStudentsDAO();
             subjectDAO = mysqlFactory.getSubjectsDAO();
             markDAO = mysqlFactory.getMarksDAO();
@@ -196,9 +196,6 @@ public class WebApp extends HttpServlet {
                     e.printStackTrace();
                 }
         }
-//        studentDAO.closeConnection();
-//        subjectDAO.closeConnection();
-//        markDAO.closeConnection();
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
