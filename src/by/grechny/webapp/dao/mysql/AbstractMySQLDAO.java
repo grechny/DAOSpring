@@ -97,4 +97,15 @@ public abstract class AbstractMySQLDAO<T> implements GenericDAO<T>{
         statement.executeUpdate();
         statement.close();
     }
+
+    @Override
+    public Boolean closeConnection (){
+        try {
+            this.connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }

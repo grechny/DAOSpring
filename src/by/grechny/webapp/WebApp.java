@@ -9,6 +9,7 @@ import by.grechny.webapp.dto.Subject;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -19,6 +20,12 @@ public class WebApp extends HttpServlet {
 
     public void doGet (HttpServletRequest request,HttpServletResponse response) {
 
+        HttpSession session = request.getSession();
+        Boolean isCreatedSession = (Boolean) session.getAttribute("isCreatedSession");
+        if (isCreatedSession == null) {
+            isCreatedSession = false;
+        }
+
         DAOFactory mysqlFactory;
         try {
             mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
@@ -26,9 +33,24 @@ public class WebApp extends HttpServlet {
             e.printStackTrace();
             return;
         }
-        GenericDAO studentDAO = mysqlFactory.getStudentsDAO();
-        GenericDAO subjectDAO = mysqlFactory.getSubjectsDAO();
-        GenericDAO markDAO = mysqlFactory.getMarksDAO();
+        GenericDAO studentDAO;
+        GenericDAO subjectDAO;
+        GenericDAO markDAO;
+
+        if (isCreatedSession){
+            studentDAO = (GenericDAO) session.getAttribute("studentDAO");
+            subjectDAO = (GenericDAO) session.getAttribute("subjectDAO");
+            markDAO = (GenericDAO) session.getAttribute("markDAO");
+        } else {
+            studentDAO = mysqlFactory.getStudentsDAO();
+            subjectDAO = mysqlFactory.getSubjectsDAO();
+            markDAO = mysqlFactory.getMarksDAO();
+            isCreatedSession = true;
+            session.setAttribute("studentDAO",studentDAO);
+            session.setAttribute("subjectDAO",subjectDAO);
+            session.setAttribute("markDAO",markDAO);
+            session.setAttribute("isCreatedSession",isCreatedSession);
+        }
 
         Student student = new Student();
         Subject subject = new Subject();
@@ -174,6 +196,9 @@ public class WebApp extends HttpServlet {
                     e.printStackTrace();
                 }
         }
+//        studentDAO.closeConnection();
+//        subjectDAO.closeConnection();
+//        markDAO.closeConnection();
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
