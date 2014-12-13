@@ -1,6 +1,5 @@
 package by.grechny.webapp;
 
-import by.grechny.webapp.dao.DAOFactory;
 import by.grechny.webapp.dao.GenericDAO;
 import by.grechny.webapp.dto.Mark;
 import by.grechny.webapp.dto.Student;
@@ -21,36 +20,10 @@ public class WebApp extends HttpServlet {
     public void doGet (HttpServletRequest request,HttpServletResponse response) {
 
         HttpSession session = request.getSession();
-        Boolean isCreatedSession = (Boolean) session.getAttribute("isCreatedSession");
-        if (isCreatedSession == null) {
-            isCreatedSession = false;
-        }
 
-        GenericDAO studentDAO;
-        GenericDAO subjectDAO;
-        GenericDAO markDAO;
-
-        if (isCreatedSession){
-            studentDAO = (GenericDAO) session.getAttribute("studentDAO");
-            subjectDAO = (GenericDAO) session.getAttribute("subjectDAO");
-            markDAO = (GenericDAO) session.getAttribute("markDAO");
-        } else {
-            DAOFactory mysqlFactory;
-            try {
-                mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-            studentDAO = mysqlFactory.getStudentsDAO();
-            subjectDAO = mysqlFactory.getSubjectsDAO();
-            markDAO = mysqlFactory.getMarksDAO();
-            isCreatedSession = true;
-            session.setAttribute("studentDAO",studentDAO);
-            session.setAttribute("subjectDAO",subjectDAO);
-            session.setAttribute("markDAO",markDAO);
-            session.setAttribute("isCreatedSession",isCreatedSession);
-        }
+        GenericDAO studentDAO = (GenericDAO) session.getAttribute("studentDAO");
+        GenericDAO subjectDAO = (GenericDAO) session.getAttribute("subjectDAO");
+        GenericDAO markDAO = (GenericDAO) session.getAttribute("markDAO");
 
         Student student = new Student();
         Subject subject = new Subject();
