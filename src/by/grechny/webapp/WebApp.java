@@ -19,31 +19,151 @@ public class WebApp extends HttpServlet {
 
     public void doGet (HttpServletRequest request,HttpServletResponse response) {
 
-        switch (request.getRequestURI()){
+        DAOFactory mysqlFactory;
+        try {
+            mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        GenericDAO studentDAO = mysqlFactory.getStudentsDAO();
+        GenericDAO subjectDAO = mysqlFactory.getSubjectsDAO();
+        GenericDAO markDAO = mysqlFactory.getMarksDAO();
 
+        Student student = new Student();
+        Subject subject = new Subject();
+        Mark mark = new Mark();
+
+        ArrayList <Student> students = new ArrayList<Student>();
+        ArrayList <Subject> subjects = new ArrayList<Subject>();
+
+        String studentId = request.getParameter("studentId");
+        String lastName = request.getParameter("lastName");
+        String firstName = request.getParameter("firstName");
+        String subjectId = request.getParameter("subjectId");
+        String subjectName = request.getParameter("subjectName");
+        String markValue = request.getParameter("markValue");
+
+        Boolean isAdded = false;
+        Boolean isUpdated = false;
+        Boolean isDeleted = false;
+
+        switch (request.getRequestURI()){
             case "/":
             case "/main":
                 getMainPage(request, response);
                 break;
+
             case "/students":
+                try {
+                    students = (ArrayList<Student>) studentDAO.selectAll();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                request.setAttribute("students", students);
                 getStudentsList(request, response);
                 break;
+
             case "/students/update":
+                if (studentId == null || lastName == null || firstName == null){
+                    isUpdated = false;
+                } else if (studentId.length() > 0 && lastName.length() > 0 && firstName.length() > 0) {
+                    student.setValues(Integer.parseInt(studentId), firstName, lastName);
+                    try {
+                        studentDAO.update(student);
+                        isUpdated = true;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                request.setAttribute("isUpdated",isUpdated);
                 getStudentUpdate(request, response);
                 break;
+
             case "/students/delete":
+
+                if (studentId == null){
+                    isDeleted = false;
+                } else if (studentId.length() > 0) {
+                    try {
+                        for (Mark marks : (ArrayList<Mark>) markDAO.selectAll()) {
+                            if (marks.getStudentId() == Integer.parseInt(studentId)) {
+                                markDAO.delete(marks.getId());
+                            }
+                        }
+                        studentDAO.delete(Integer.parseInt(studentId));
+                        isDeleted = true;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                request.setAttribute("isDeleted",isDeleted);
                 getStudentDelete(request, response);
                 break;
+
             case "/subjects":
+                try {
+                    subjects = (ArrayList<Subject>) subjectDAO.selectAll();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                request.setAttribute("subjects", subjects);
                 getSubjectsList(request, response);
                 break;
+
             case "/subjects/update":
+                if (subjectId == null || subjectName == null){
+                    isUpdated = false;
+                } else if (subjectId.length() > 0 && subjectName.length() > 0) {
+                    subject.setValues(Integer.parseInt(subjectId),subjectName);
+                    try {
+                        subjectDAO.update(subject);
+                        isUpdated = true;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                request.setAttribute("isUpdated",isUpdated);
                 getSubjectUpdate(request, response);
                 break;
+
             case "/subjects/delete":
+                if (subjectId == null) {
+                    isDeleted = false;
+                } else if (subjectId.length() > 0) {
+                    try {
+                        for (Mark marks : (ArrayList<Mark>) markDAO.selectAll()) {
+                            if (marks.getSubjectId() == Integer.parseInt(subjectId)) {
+                                markDAO.delete(marks.getId());
+                            }
+                        }
+                        subjectDAO.delete(Integer.parseInt(subjectId));
+                        isDeleted = true;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                request.setAttribute("isDeleted",isDeleted);
                 getSubjectDelete(request, response);
                 break;
+
             case "/marks/add":
+                if (studentId == null || subjectId == null || markValue == null) {
+                    isAdded = false;
+                } else if (studentId.length() > 0 && subjectId.length() > 0  && markValue.length() > 0) {
+                    int student_id = Integer.parseInt(studentId);
+                    int subject_Id = Integer.parseInt(subjectId);
+                    int mark_value = Integer.parseInt(markValue);
+                    mark.setValues(0,student_id,subject_Id,mark_value);
+                    try {
+                        markDAO.create(mark);
+                        isAdded = true;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                request.setAttribute("isAdded",isAdded);
                 getMarkAdd(request, response);
                 break;
 
@@ -104,30 +224,15 @@ public class WebApp extends HttpServlet {
         out.println("<html>");
         out.println("<head><title>Students</title></head>");
         out.println("<body>");
-
         out.println("<a href=\"/main\"><input type=\"button\" value=\"Main Page\"></a><br><br>");
-
-        DAOFactory mysqlFactory;
-        try {
-            mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-        GenericDAO studentDAO = mysqlFactory.getStudentsDAO();
 
         out.println("<table border=\"1\">");
         out.println("<thead> <th>Student Id</th> <th>Last Name</th> <th>First Name</th> </thead>");
         out.println("<tbody>");
-        try {
-            for (Student students : (ArrayList<Student>) studentDAO.selectAll()) {
-                out.println("<tr><td>" + students.getId() +
-                        "</td><td>" + students.getLastName() + "</td><td>" + students.getFirstName() + "</td></tr>");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        for (Student students : (ArrayList<Student>) request.getAttribute("students")) {
+            out.println("<tr><td>" + students.getId() +
+                    "</td><td>" + students.getLastName() + "</td><td>" + students.getFirstName() + "</td></tr>");
         }
-
         out.println("</tbody></table>");
         out.println("</body></html>");
         out.close();
@@ -171,35 +276,22 @@ public class WebApp extends HttpServlet {
             out.println("<br>");
             out.println("<input type=submit>");
             out.println("</form>");
-
             out.println("</body></html>");
-            out.close();
 
         } else if (studentId.length() > 0 && lastName.length() > 0 && firstName.length() > 0) {
 
-            DAOFactory mysqlFactory;
-            try {
-                mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
-            } catch (Exception e) {
-                e.printStackTrace();
+            Boolean isUpdated = (Boolean) request.getAttribute("isUpdated");
+            if (isUpdated) {
+                out.println("Student is updated successfully<br>");
+            } else {
+                out.println("Unable to update student");
+                out.println("</body></html>");
+                out.close();
                 return;
             }
 
-            GenericDAO studentDAO = mysqlFactory.getStudentsDAO();
-            Student student = new Student();
-
-            int student_id = Integer.parseInt(studentId);
-            student.setValues(student_id, firstName, lastName);
-            try {
-                studentDAO.update(student);
-                out.println("Student is updated successfully<br>");
-            } catch (SQLException e) {
-                e.printStackTrace();
-                out.println("Unable to update student");
-            }
-
             out.println("Student ID");
-            out.println(" = " + student_id + "<br>");
+            out.println(" = " + studentId + "<br>");
             out.println("Last Name:");
             out.println(" = " + lastName + "<br>");
             out.println("First Name:");
@@ -207,6 +299,8 @@ public class WebApp extends HttpServlet {
 
         } else out.println("Please try again");
 
+        out.println("</body></html>");
+        out.close();
     }
 
     private void getStudentDelete(HttpServletRequest request, HttpServletResponse response) {
@@ -241,35 +335,17 @@ public class WebApp extends HttpServlet {
 
         } else if (studentId.length() > 0) {
 
-            DAOFactory mysqlFactory;
-            try {
-                mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-
-            GenericDAO studentDAO = mysqlFactory.getStudentsDAO();
-            GenericDAO markDAO = mysqlFactory.getMarksDAO();
-            int student_id = Integer.parseInt(studentId);
-
-            try {
-                for (Mark marks : (ArrayList<Mark>) markDAO.selectAll()) {
-                    if (marks.getStudentId() == student_id) {
-                        markDAO.delete(marks.getId());
-                    }
-                }
-
-                studentDAO.delete(student_id);
-                out.println("Student ID " + student_id + " is deleted successfully<br>");
-
-            } catch (SQLException e) {
-                e.printStackTrace();
+            Boolean isDeleted = (Boolean) request.getAttribute("isDeleted");
+            if (isDeleted) {
+                out.println("Student ID " + studentId + " is deleted successfully<br>");
+            } else {
                 out.println("Unable to delete student");
             }
 
         } else out.println("<br>Please try again");
 
+        out.println("</body></html>");
+        out.close();
     }
 
     private void getSubjectsList(HttpServletRequest request, HttpServletResponse response) {
@@ -286,34 +362,17 @@ public class WebApp extends HttpServlet {
         out.println("<html>");
         out.println("<head><title>Subjects</title></head>");
         out.println("<body>");
-
         out.println("<a href=\"/main\"><input type=\"button\" value=\"Main Page\"></a><br><br>");
-
-        DAOFactory mysqlFactory;
-        try {
-            mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-        GenericDAO subjectDAO = mysqlFactory.getSubjectsDAO();
-
         out.println("<table border=\"1\">");
         out.println("<thead> <th>Subject Id</th> <th>Subject Name</th></thead>");
         out.println("<tbody>");
-        try {
-            for (Subject subjects : (ArrayList<Subject>) subjectDAO.selectAll()) {
-                out.println("<tr><td>" + subjects.getId() +
-                        "</td><td>" + subjects.getSubject() + "</td></tr>");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        for (Subject subjects : (ArrayList<Subject>) request.getAttribute("subjects")) {
+            out.println("<tr><td>" + subjects.getId() +
+                    "</td><td>" + subjects.getSubject() + "</td></tr>");
         }
-
         out.println("</tbody></table>");
         out.println("</body></html>");
         out.close();
-
     }
 
     private void getSubjectUpdate(HttpServletRequest request, HttpServletResponse response) {
@@ -352,28 +411,18 @@ public class WebApp extends HttpServlet {
 
         } else if (subjectId.length() > 0 && subjectName.length() > 0) {
 
-            DAOFactory mysqlFactory;
-            try {
-                mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-            GenericDAO subjectDAO = mysqlFactory.getSubjectsDAO();
-            Subject subject = new Subject();
-
-            int subject_id = Integer.parseInt(subjectId);
-            subject.setValues(subject_id,subjectName);
-            try {
-                subjectDAO.update(subject);
+            Boolean isUpdated = (Boolean) request.getAttribute("isUpdated");
+            if (isUpdated) {
                 out.println("Subject is updated successfully<br>");
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } else {
                 out.println("Unable to update Subject");
+                out.println("</body></html>");
+                out.close();
+                return;
             }
 
             out.println("Subject ID");
-            out.println(" = " + subject_id + "<br>");
+            out.println(" = " + subjectId + "<br>");
             out.println("Subject Name:");
             out.println(" = " + subjectName + "<br>");
 
@@ -416,29 +465,10 @@ public class WebApp extends HttpServlet {
 
         } else if (subjectId.length() > 0) {
 
-            DAOFactory mysqlFactory;
-            try {
-                mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-            GenericDAO subjectDAO = mysqlFactory.getSubjectsDAO();
-            GenericDAO markDAO = mysqlFactory.getMarksDAO();
-            int subject_id = Integer.parseInt(subjectId);
-
-            try {
-                for (Mark marks : (ArrayList<Mark>) markDAO.selectAll()) {
-                    if (marks.getSubjectId() == subject_id) {
-                        markDAO.delete(marks.getId());
-                    }
-                }
-
-                subjectDAO.delete(subject_id);
-                out.println("Subject ID " + subject_id + " is deleted successfully<br>");
-
-            } catch (SQLException e) {
-                e.printStackTrace();
+            Boolean isDeleted = (Boolean) request.getAttribute("isDeleted");
+            if (isDeleted) {
+                out.println("Subject ID " + subjectId + " is deleted successfully<br>");
+            } else {
                 out.println("Unable to delete subject");
             }
 
@@ -488,34 +518,22 @@ public class WebApp extends HttpServlet {
 
         } else if (studentId.length() > 0 && subjectId.length() > 0  && markValue.length() > 0) {
 
-            DAOFactory mysqlFactory;
-            try {
-                mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.Factory.MYSQL);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-            GenericDAO markDAO = mysqlFactory.getMarksDAO();
-            Mark marks = new Mark();
-
-            int student_id = Integer.parseInt(studentId);
-            int subject_Id = Integer.parseInt(subjectId);
-            int mark_value = Integer.parseInt(markValue);
-            marks.setValues(0,student_id,subject_Id,mark_value);
-            try {
-                markDAO.create(marks);
+            Boolean isAdded = (Boolean) request.getAttribute("isAdded");
+            if (isAdded) {
                 out.println("Mark is added successfully<br>");
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } else {
                 out.println("Unable to add mark");
+                out.println("</body></html>");
+                out.close();
+                return;
             }
 
             out.println("Student ID");
-            out.println(" = " + student_id + "<br>");
+            out.println(" = " + studentId + "<br>");
             out.println("Subject ID");
-            out.println(" = " + subject_Id + "<br>");
+            out.println(" = " + subjectId + "<br>");
             out.println("Mark is ");
-            out.println(mark_value);
+            out.println(markValue);
 
         } else out.println("<br>Please, try again");
 
