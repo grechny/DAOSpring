@@ -46,7 +46,7 @@ public class WebApp extends HttpServlet {
         switch (request.getRequestURI()){
             case "/":
             case "/main":
-                getServletContext().getRequestDispatcher("/mainPage.jsp").forward(request, response);
+                getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
                 break;
 
             case "/students":
