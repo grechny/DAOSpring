@@ -81,12 +81,8 @@ public class WebApp extends HttpServlet {
                     isDeleted = false;
                 } else if (studentId.length() > 0) {
                     try {
-                        for (Mark marks : (ArrayList<Mark>) markDAO.selectAll()) {
-                            if (marks.getStudentId() == Integer.parseInt(studentId)) {
-                                markDAO.delete(marks.getId());
-                            }
-                        }
-                        studentDAO.delete(Integer.parseInt(studentId));
+                        student = (Student) studentDAO.selectById(Integer.parseInt(studentId));
+                        studentDAO.delete(student);
                         isDeleted = true;
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -127,12 +123,8 @@ public class WebApp extends HttpServlet {
                     isDeleted = false;
                 } else if (subjectId.length() > 0) {
                     try {
-                        for (Mark marks : (ArrayList<Mark>) markDAO.selectAll()) {
-                            if (marks.getSubjectId() == Integer.parseInt(subjectId)) {
-                                markDAO.delete(marks.getId());
-                            }
-                        }
-                        subjectDAO.delete(Integer.parseInt(subjectId));
+                        subject = (Subject) subjectDAO.selectById(Integer.parseInt(subjectId));
+                        subjectDAO.delete(subject);
                         isDeleted = true;
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -149,8 +141,10 @@ public class WebApp extends HttpServlet {
                     int student_id = Integer.parseInt(studentId);
                     int subject_Id = Integer.parseInt(subjectId);
                     int mark_value = Integer.parseInt(markValue);
-                    mark.setValues(0,student_id,subject_Id,mark_value);
                     try {
+                        student = (Student) studentDAO.selectById(student_id);
+                        subject = (Subject) subjectDAO.selectById(subject_Id);
+                        mark.setValues(0,student,subject,mark_value);
                         markDAO.create(mark);
                         isAdded = true;
                     } catch (SQLException e) {
@@ -160,7 +154,6 @@ public class WebApp extends HttpServlet {
                 request.setAttribute("isAdded",isAdded);
                 getServletContext().getRequestDispatcher("/marksAdd.jsp").forward(request, response);
                 break;
-
             default:
                 try {
                     response.sendError(404, "Page doesn't exist");

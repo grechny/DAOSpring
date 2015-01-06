@@ -11,11 +11,11 @@ import java.util.List;
 
 public interface GenericDAO <T> {
 
-    public T selectByID (Integer key) throws SQLException;
+    public T selectById (Integer id) throws SQLException;
     public List<T> selectAll() throws SQLException;
     public T create(T object) throws SQLException;
     public void update(T object) throws SQLException;
-    public void delete(Integer key) throws SQLException;
-    public Boolean closeConnection ();
+    public void delete(T object) throws SQLException;
+    public void closeConnection ();
 
 }

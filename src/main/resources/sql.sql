@@ -1,15 +1,15 @@
-CREATE TABLE students (
+CREATE TABLE IF NOT EXISTS students (
   id int(10) NOT NULL AUTO_INCREMENT,
   first_name varchar(50) DEFAULT NULL,
   last_name varchar(50) DEFAULT NULL,
   PRIMARY KEY (id)
 );
-CREATE TABLE subjects (
+CREATE TABLE IF NOT EXISTS  subjects (
   id int(10) NOT NULL AUTO_INCREMENT,
   subject varchar(50) DEFAULT NULL,
   PRIMARY KEY (id)
 );
-CREATE TABLE marks (
+CREATE TABLE IF NOT EXISTS  marks (
   mark_id int(100) NOT NULL AUTO_INCREMENT,
   student_id int(10) DEFAULT NULL,
   subject_id int(10) DEFAULT NULL,
