@@ -12,7 +12,6 @@ public class Student {
     private String lastName;
     private Set<Mark> marks;
 
-
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -50,7 +49,7 @@ public class Student {
 
     }
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id")
     public Set<Mark> getMarks() {
         return marks;

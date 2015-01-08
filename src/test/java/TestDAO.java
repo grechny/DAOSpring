@@ -10,7 +10,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class TestDAO {
 
@@ -30,53 +29,19 @@ public class TestDAO {
         markDAO = mysqlFactory.getMarksDAO();
     }
 
+    @AfterClass
+    public static void destroyDAO(){
+        MySQLDAOFactory.closeConnection();
+    }
+
     @Test
     public void testDAO() throws Exception {
 
         Assert.assertNotNull("Error - DAO Factory doesn't exist",mysqlFactory);
-        Assert.assertNotNull("Error - student DAO doesn't exist",studentDAO);
+        Assert.assertNotNull("Error - student DAO doesn't exist", studentDAO);
         Assert.assertNotNull("Error - subject DAO doesn't exist",subjectDAO);
-        Assert.assertNotNull("Error - mark DAO doesn't exist",markDAO);
+        Assert.assertNotNull("Error - mark DAO doesn't exist", markDAO);
 
-    }
-
-    @Test
-    public void testDelete() throws SQLException {
-
-        Student student = new Student();
-        student.setValues(1, "Alexander", "Grechny");
-        Student actualStudent = (Student) studentDAO.selectById(1);
-        Assert.assertEquals("Objects (Student) doesn't equal", student, actualStudent);
-
-        studentDAO.delete(actualStudent);
-    }
-
-    @Test
-    public void testDeleteReference() throws SQLException {
-
-        Student student = new Student();
-        student.setValues(2, "Natallia", "Kosyak");
-        Student actualStudent = (Student) studentDAO.selectById(2);
-        Assert.assertEquals("Objects (Student) doesn't equal", student, actualStudent);
-
-        ArrayList<Mark> marks;
-        ArrayList<Mark> expectedMarks = new ArrayList<>();
-        marks = (ArrayList<Mark>) markDAO.selectAll();
-        for (Mark mark : marks) {
-            if (actualStudent.equals(mark.getStudentId())) {
-                expectedMarks.add(mark);
-            }
-        }
-
-        studentDAO.delete(actualStudent);
-        actualStudent = (Student) studentDAO.selectById(actualStudent.getId());
-        Assert.assertNull("Object Student doesn't delete", actualStudent);
-
-        Mark actualMark;
-        for (Mark mark : expectedMarks) {
-            actualMark = (Mark) markDAO.selectById(mark.getId());
-            Assert.assertNull("Object Mark doesn't delete", actualMark);
-        }
     }
 
     @Test
@@ -108,7 +73,7 @@ public class TestDAO {
     }
 
     @Test
-    public void testCreateMarkDeleteStudent() throws SQLException {
+    public void testCreateDeleteMark() throws Exception {
 
         Student student = new Student();
         student.setValues(0, "FirstName", "LastName");
@@ -128,29 +93,8 @@ public class TestDAO {
         mark.setId(actualMark.getId());
         Assert.assertEquals("Objects (Mark) doesn't equal",mark,actualMark);
 
-        ArrayList<Mark> marks;
-        ArrayList<Mark> expectedMarks = new ArrayList<>();
-        marks = (ArrayList<Mark>) markDAO.selectAll();
-        for (Mark aMark : marks) {
-            if (actualStudent.equals(aMark.getStudentId())) {
-                expectedMarks.add(aMark);
-            }
-        }
-
-        studentDAO.delete(actualStudent);
-        actualStudent = (Student) studentDAO.selectById(actualStudent.getId());
-        Assert.assertNull("Object Student doesn't delete", actualStudent);
-
-        for (Mark aMark : expectedMarks) {
-            actualMark = (Mark) markDAO.selectById(aMark.getId());
-            Assert.assertNull("Object Mark doesn't delete", actualMark);
-        }
-    }
-
-    @AfterClass
-    public static void destroyDAO(){
-
-        MySQLDAOFactory.closeConnection();
-
+        markDAO.delete(actualMark);
+        actualMark = (Mark) markDAO.selectById(actualMark.getId());
+        Assert.assertNull("Object Mark doesn't delete", actualMark);
     }
 }

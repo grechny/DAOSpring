@@ -16,6 +16,5 @@ public interface GenericDAO <T> {
     public T create(T object) throws SQLException;
     public void update(T object) throws SQLException;
     public void delete(T object) throws SQLException;
-//    public void closeConnection ();
 
 }

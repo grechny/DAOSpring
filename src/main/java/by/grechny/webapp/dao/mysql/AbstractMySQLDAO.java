@@ -49,9 +49,4 @@ public abstract class AbstractMySQLDAO<T> implements GenericDAO<T> {
         em.remove(em.merge(object));
         em.getTransaction().commit();
     }
-/*
-    @Override
-    public void closeConnection() {
-        em.close();
-    }*/
 }
