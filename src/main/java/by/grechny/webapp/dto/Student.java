@@ -50,7 +50,7 @@ public class Student {
 
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "student_id")
     public Set<Mark> getMarks() {
         return marks;

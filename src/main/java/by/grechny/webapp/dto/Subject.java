@@ -38,7 +38,7 @@ public class Subject {
 
     }
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "subject_id")
     public Set<Mark> getMarks() {
         return marks;

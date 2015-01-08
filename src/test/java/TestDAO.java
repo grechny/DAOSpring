@@ -88,24 +88,23 @@ public class TestDAO {
         student.setId(actualStudent.getId());
         Assert.assertEquals("Objects (Student) doesn't equal", student, actualStudent);
 
-        ArrayList<Mark> marks;
-        ArrayList<Mark> expectedMarks = new ArrayList<>();
-        marks = (ArrayList<Mark>) markDAO.selectAll();
-        for (Mark mark : marks) {
-            if (actualStudent.equals(mark.getStudentId())) {
-                expectedMarks.add(mark);
-            }
-        }
-
         studentDAO.delete(actualStudent);
         actualStudent = (Student) studentDAO.selectById(actualStudent.getId());
         Assert.assertNull("Object Student doesn't delete", actualStudent);
+    }
 
-        Mark actualMark;
-        for (Mark mark : expectedMarks) {
-            actualMark = (Mark) markDAO.selectById(mark.getId());
-            Assert.assertNull("Object Mark doesn't delete", actualMark);
-        }
+    @Test
+    public void testCreateDeleteSubject() throws SQLException {
+
+        Subject subject = new Subject();
+        subject.setValues(0, "Subject");
+        Subject actualSubject = (Subject) studentDAO.create(subject);
+        subject.setId(actualSubject.getId());
+        Assert.assertEquals("Objects (Student) doesn't equal", subject, actualSubject);
+
+        studentDAO.delete(actualSubject);
+        actualSubject = (Subject) studentDAO.selectById(actualSubject.getId());
+        Assert.assertNull("Object Student doesn't delete", actualSubject);
     }
 
     @Test
@@ -147,52 +146,6 @@ public class TestDAO {
             Assert.assertNull("Object Mark doesn't delete", actualMark);
         }
     }
-        /*Student student = new Student();
-        Student actualStudent;
-        student.setValues(0, "FirstName", "LastName");
-        actualStudent = (Student) studentDAO.create(student);
-
-        Subject subject = new Subject();
-        Subject actualSubject;
-        subject.setValues(0,"Subject");
-        actualSubject = (Subject) subjectDAO.create(subject);
-
-        Mark mark = new Mark();
-        Mark actualMark;
-        mark.setValues(0,actualStudent,actualSubject,10);
-        actualMark = (Mark) markDAO.create(mark);
-
-        Assert.assertNotNull(actualStudent);
-        Assert.assertNotNull(actualSubject);
-        Assert.assertNotNull(actualMark);
-
-        student.setValues(actualStudent.getId(),"NewFirstName","NewLastName");
-        subject.setValues(actualSubject.getId(),"NewSubject");
-        mark.setValues(actualMark.getId(),actualStudent,actualSubject,0);
-
-        studentDAO.update(student);
-        subjectDAO.update(subject);
-        markDAO.update(mark);
-
-        actualStudent = (Student) studentDAO.selectById(student.getId());
-        actualSubject = (Subject) subjectDAO.selectById(subject.getId());
-        actualMark = (Mark) markDAO.selectById(mark.getId());
-
-        Assert.assertEquals("Objects (Student) doesn't equal",student,actualStudent);
-        Assert.assertEquals("Objects (Subject) doesn't equal",subject,actualSubject);
-        Assert.assertEquals("Objects (Mark) doesn't equal",mark,actualMark);
-
-        studentDAO.delete(actualStudent);
-        subjectDAO.delete(subject);
-
-        actualStudent = (Student) studentDAO.selectById(student.getId());
-        actualSubject = (Subject) subjectDAO.selectById(subject.getId());
-        actualMark = (Mark) markDAO.selectById(mark.getId());
-
-        Assert.assertNull("Object Student doesn't delete",actualStudent);
-        Assert.assertNull("Object Subject doesn't delete",actualSubject);
-        Assert.assertNull("Object Mark doesn't delete",actualMark);*/
-
 
     @AfterClass
     public static void destroyDAO(){
