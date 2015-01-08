@@ -30,9 +30,10 @@ public abstract class AbstractMySQLDAO<T> implements GenericDAO<T> {
     @Override
     public T create(T object) throws SQLException {
         em.getTransaction().begin();
-        T objectFromDB = em.merge(object);
+        em.persist(object);
+        em.flush();
         em.getTransaction().commit();
-        return objectFromDB;
+        return object;
     }
 
     @Override
