@@ -12,7 +12,7 @@ public abstract class AbstractMySQLDAO<T> implements GenericDAO<T> {
     protected EntityManager em;
 
     public AbstractMySQLDAO() {
-        this.em = MySQLDAOFactory.createConnection();
+        this.em = MySQLDAOFactory.getConnection();
     }
 
     public abstract String selectAllQuery();
@@ -48,9 +48,9 @@ public abstract class AbstractMySQLDAO<T> implements GenericDAO<T> {
         em.remove(em.merge(object));
         em.getTransaction().commit();
     }
-
+/*
     @Override
     public void closeConnection() {
         em.close();
-    }
+    }*/
 }

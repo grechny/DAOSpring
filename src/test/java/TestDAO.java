@@ -1,5 +1,6 @@
 import by.grechny.webapp.dao.DAOFactory;
 import by.grechny.webapp.dao.GenericDAO;
+import by.grechny.webapp.dao.mysql.MySQLDAOFactory;
 import by.grechny.webapp.dto.Mark;
 import by.grechny.webapp.dto.Student;
 import by.grechny.webapp.dto.Subject;
@@ -91,9 +92,7 @@ public class TestDAO {
     @AfterClass
     public static void destroyDAO(){
 
-        studentDAO.closeConnection();
-        subjectDAO.closeConnection();
-        markDAO.closeConnection();
+        MySQLDAOFactory.closeConnection();
 
     }
 }
