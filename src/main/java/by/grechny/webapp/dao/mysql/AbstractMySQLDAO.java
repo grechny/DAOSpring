@@ -45,13 +45,12 @@ public abstract class AbstractMySQLDAO<T> implements GenericDAO<T> {
     @Override
     public void delete(T object) throws SQLException {
         em.getTransaction().begin();
-        em.remove(object);
+        em.remove(em.merge(object));
         em.getTransaction().commit();
     }
 
     @Override
     public void closeConnection() {
         em.close();
-        em.getEntityManagerFactory().close();
     }
 }

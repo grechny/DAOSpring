@@ -57,4 +57,14 @@ public class Mark {
         this.subjectId = subjectId;
         this.mark = mark;
     }
+
+    @Override
+    public boolean equals(Object object){
+        if (object == null) return false;
+        if (object == this) return true;
+        if (!(object instanceof Mark))return false;
+        Mark mark = (Mark)object;
+        return (mark.getId() == this.id) && (mark.getStudentId().equals(this.studentId))
+                && (mark.getSubjectId().equals(this.subjectId)) && (mark.getMark() == this.mark);
+    }
 }

@@ -47,6 +47,15 @@ public class Subject {
     public void setMarks(Set<Mark> marks){
         this.marks = marks;
     }
+
+    @Override
+    public boolean equals(Object object){
+        if (object == null) return false;
+        if (object == this) return true;
+        if (!(object instanceof Subject))return false;
+        Subject subject = (Subject)object;
+        return (subject.getId() == this.id) && (subject.getSubject().equals(this.subject));
+    }
 }
 
 
