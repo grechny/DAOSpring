@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class WebApp extends HttpServlet {
 
+    @SuppressWarnings("unchecked")
     public void doGet (HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();

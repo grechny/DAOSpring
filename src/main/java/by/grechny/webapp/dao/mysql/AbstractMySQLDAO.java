@@ -21,6 +21,7 @@ public abstract class AbstractMySQLDAO<T> implements GenericDAO<T> {
     public List<T> selectAll() throws SQLException {
         em.getTransaction().begin();
         String selectAllQuery = selectAllQuery();
+        @SuppressWarnings("unchecked")
         TypedQuery<T> query = (TypedQuery<T>) em.createQuery(selectAllQuery);
         List<T> list = query.getResultList();
         em.getTransaction().commit();

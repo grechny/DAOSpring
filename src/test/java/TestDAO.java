@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 
+@SuppressWarnings({"unused","unchecked"})
 public class TestDAO {
 
     public static DAOFactory mysqlFactory;
