@@ -3,6 +3,7 @@ package by.grechny.webapp.dao.mysql;
 import by.grechny.webapp.dao.GenericDAO;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import java.sql.SQLException;
 import java.util.List;
@@ -12,7 +13,7 @@ public abstract class AbstractMySQLDAO<T> implements GenericDAO<T> {
     protected EntityManager em;
 
     public AbstractMySQLDAO() {
-        this.em = MySQLDAOFactory.getConnection();
+        em = Persistence.createEntityManagerFactory("MYSQL").createEntityManager();
     }
 
     public abstract String selectAllQuery();

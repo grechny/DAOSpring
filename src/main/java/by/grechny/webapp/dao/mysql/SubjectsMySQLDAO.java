@@ -2,9 +2,12 @@
 package by.grechny.webapp.dao.mysql;
 
 import by.grechny.webapp.dto.Subject;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 
+@Repository(value = "subjectsMysqlDao")
+@SuppressWarnings("unused")
 public class SubjectsMySQLDAO extends AbstractMySQLDAO<Subject> {
 
     @Override

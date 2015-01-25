@@ -1,30 +1,31 @@
-package by.grechny.webapp;
+package by.grechny.webapp.web;
 
 import by.grechny.webapp.dao.GenericDAO;
 import by.grechny.webapp.dto.Mark;
 import by.grechny.webapp.dto.Student;
 import by.grechny.webapp.dto.Subject;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-
 public class WebApp extends HttpServlet {
 
-    @SuppressWarnings("unchecked")
     public void doGet (HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
-
-        GenericDAO studentDAO = (GenericDAO) session.getAttribute("studentDAO");
-        GenericDAO subjectDAO = (GenericDAO) session.getAttribute("subjectDAO");
-        GenericDAO markDAO = (GenericDAO) session.getAttribute("markDAO");
+        WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        @SuppressWarnings("unchecked")
+        GenericDAO<Student> studentDAO = (GenericDAO<Student>) ctx.getBean("studentsMysqlDao");
+        @SuppressWarnings("unchecked")
+        GenericDAO<Subject> subjectDAO = (GenericDAO<Subject>) ctx.getBean("subjectsMysqlDao");
+        @SuppressWarnings("unchecked")
+        GenericDAO<Mark> markDAO = (GenericDAO<Mark>) ctx.getBean("marksMysqlDao");
 
         Student student = new Student();
         Subject subject = new Subject();
@@ -82,7 +83,7 @@ public class WebApp extends HttpServlet {
                     isDeleted = false;
                 } else if (studentId.length() > 0) {
                     try {
-                        student = (Student) studentDAO.selectById(Integer.parseInt(studentId));
+                        student = studentDAO.selectById(Integer.parseInt(studentId));
                         studentDAO.delete(student);
                         isDeleted = true;
                     } catch (SQLException e) {
@@ -124,7 +125,7 @@ public class WebApp extends HttpServlet {
                     isDeleted = false;
                 } else if (subjectId.length() > 0) {
                     try {
-                        subject = (Subject) subjectDAO.selectById(Integer.parseInt(subjectId));
+                        subject = subjectDAO.selectById(Integer.parseInt(subjectId));
                         subjectDAO.delete(subject);
                         isDeleted = true;
                     } catch (SQLException e) {
@@ -143,8 +144,8 @@ public class WebApp extends HttpServlet {
                     int subject_Id = Integer.parseInt(subjectId);
                     int mark_value = Integer.parseInt(markValue);
                     try {
-                        student = (Student) studentDAO.selectById(student_id);
-                        subject = (Subject) subjectDAO.selectById(subject_Id);
+                        student = studentDAO.selectById(student_id);
+                        subject = subjectDAO.selectById(subject_Id);
                         mark.setValues(0,student,subject,mark_value);
                         markDAO.create(mark);
                         isAdded = true;
