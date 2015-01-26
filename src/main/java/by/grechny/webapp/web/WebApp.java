@@ -4,9 +4,10 @@ import by.grechny.webapp.dao.GenericDAO;
 import by.grechny.webapp.dto.Mark;
 import by.grechny.webapp.dto.Student;
 import by.grechny.webapp.dto.Subject;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,15 +18,19 @@ import java.util.ArrayList;
 
 public class WebApp extends HttpServlet {
 
-    public void doGet (HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+    @Autowired
+    protected GenericDAO<Student> studentDAO;
+    @Autowired
+    protected GenericDAO<Subject> subjectDAO;
+    @Autowired
+    protected GenericDAO<Mark> markDAO;
 
-        WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-        @SuppressWarnings("unchecked")
-        GenericDAO<Student> studentDAO = (GenericDAO<Student>) ctx.getBean("studentsMysqlDao");
-        @SuppressWarnings("unchecked")
-        GenericDAO<Subject> subjectDAO = (GenericDAO<Subject>) ctx.getBean("subjectsMysqlDao");
-        @SuppressWarnings("unchecked")
-        GenericDAO<Mark> markDAO = (GenericDAO<Mark>) ctx.getBean("marksMysqlDao");
+    public void init (ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+    }
+
+    public void doGet (HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 
         Student student = new Student();
         Subject subject = new Subject();
