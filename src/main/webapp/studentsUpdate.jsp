@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Students Update</title>
+    <script type="text/javascript" src="/js/xmlhttprequest.js"></script>
 </head>
 <body>
   <a href=/main><input type=button value="Main Page"></a><br><br>
@@ -11,7 +12,7 @@
   String firstName = request.getParameter("firstName");
 
   if (studentId == null || lastName == null || firstName == null){%>
-    <form action=/students/update method=POST>
+    <form name="formStudentUpdate" action="javascript:studentUpdate(formStudentUpdate)" method=POST>
       Student ID: <input type=text size=20 name=studentId><br>
       Last Name:  <input type=text size=20 name=lastName><br>
       First Name: <input type=text size=20 name=firstName><br>
